@@ -25,8 +25,8 @@ public class TaskService {
         return taskRepository.findAll();
     }
 
-    public void update(TaskModel taskEntity) {
-        taskRepository.save(taskEntity);
+    public TaskModel update(TaskModel taskModel) {
+        return taskRepository.save(taskModel);
     }
 
     public void delete(UUID id) {

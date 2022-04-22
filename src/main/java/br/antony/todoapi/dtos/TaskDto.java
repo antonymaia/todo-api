@@ -9,4 +9,5 @@ public class TaskDto {
 
     @NotBlank
     private String description;
+    private boolean checked;
 }

@@ -35,10 +35,13 @@ public class TaskController{
         return ResponseEntity.ok(taskList);
     }
 
-    @PutMapping()
-    public ResponseEntity<Void> update(@RequestBody TaskModel taskEntity){
-        taskService.update(taskEntity);
-        return ResponseEntity.ok().build();
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Object> update(@PathVariable UUID id, @RequestBody TaskDto taskDto){
+        TaskModel taskModel = new TaskModel();
+        BeanUtils.copyProperties(taskDto, taskModel);
+        taskModel.setId(id);
+        taskService.update(taskModel);
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.update(taskModel));
     }
 
     @DeleteMapping(value = "/{id}")
