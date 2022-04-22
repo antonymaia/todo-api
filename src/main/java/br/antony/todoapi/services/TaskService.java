@@ -1,11 +1,13 @@
 package br.antony.todoapi.services;
 
-import br.antony.todoapi.models.Task;
+import br.antony.todoapi.models.TaskModel;
 import br.antony.todoapi.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TaskService {
@@ -13,21 +15,21 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public void create(Task taskEntity) {
-        taskEntity.setId(null);
+    @Transactional
+    public TaskModel create(TaskModel taskEntity) {
         taskEntity.setChecked(false);
-        taskRepository.save(taskEntity);
+        return taskRepository.save(taskEntity);
     }
 
-    public List<Task> findAll() {
+    public List<TaskModel> findAll() {
         return taskRepository.findAll();
     }
 
-    public void update(Task taskEntity) {
+    public void update(TaskModel taskEntity) {
         taskRepository.save(taskEntity);
     }
 
-    public void delete(Long id) {
+    public void delete(UUID id) {
         taskRepository.deleteById(id);
     }
 

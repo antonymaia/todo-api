@@ -1,41 +1,48 @@
 package br.antony.todoapi.controllers;
 
-import br.antony.todoapi.models.Task;
+import br.antony.todoapi.dtos.TaskDto;
+import br.antony.todoapi.models.TaskModel;
 import br.antony.todoapi.services.TaskService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-@CrossOrigin("*")
 @RestController()
+@CrossOrigin(value = "*", maxAge = 3600)
 @RequestMapping("/task")
 public class TaskController{
 
     @Autowired
     private TaskService taskService;
 
+    @PostMapping()
+    public ResponseEntity<Object> create(@RequestBody @Valid TaskDto taskDto){
+        TaskModel taskModel = new TaskModel();
+        BeanUtils.copyProperties(taskDto, taskModel);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(taskModel));
+    }
+
     @GetMapping()
-    public ResponseEntity<List<Task>> findAll(){
-        List<Task> taskList = taskService.findAll();
+    public ResponseEntity<List<TaskModel>> findAll(){
+        List<TaskModel> taskList = taskService.findAll();
         return ResponseEntity.ok(taskList);
     }
 
-    @PostMapping()
-    public ResponseEntity<Void> create(@RequestBody Task taskEntity){
-        taskService.create(taskEntity);
-        return ResponseEntity.created(null).build();
-    }
-
     @PutMapping()
-    public ResponseEntity<Void> update(@RequestBody Task taskEntity){
+    public ResponseEntity<Void> update(@RequestBody TaskModel taskEntity){
         taskService.update(taskEntity);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id){
+    public ResponseEntity<Void> deleteById(@PathVariable UUID id){
         taskService.delete(id);
         return ResponseEntity.ok().build();
     }
